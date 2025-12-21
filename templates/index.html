@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors - Ultimate Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #0f172a; /* Slate 900 */
+            background-image: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                              radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                              radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            color: #d1d5db;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+            border-color: #6366f1; /* Indigo 500 */
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        /* Hidden class handling for transitions */
+        .hidden-fade {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .show-fade {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-between py-10 overflow-hidden">
+
+    <!-- Header -->
+    <header class="w-full max-w-6xl px-6 flex justify-between items-center z-10">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center font-bold text-white text-xl shadow-lg shadow-indigo-500/30">
+                G
+            </div>
+            <h1 class="text-2xl font-bold tracking-wide text-white">GAME<span class="text-indigo-400">STORE</span></h1>
+        </div>
+        <nav class="hidden md:flex gap-8 text-sm font-semibold text-slate-400">
+            <a href="#" class="hover:text-white transition-colors">STORE</a>
+            <a href="#" class="text-white border-b-2 border-indigo-500 pb-1">LIBRARY</a>
+            <a href="#" class="hover:text-white transition-colors">COMMUNITY</a>
+            <a href="#" class="hover:text-white transition-colors">PROFILE</a>
+        </nav>
+        <div class="flex items-center gap-4">
+            <span class="text-sm font-medium text-slate-300">Player 1</span>
+            <div class="w-10 h-10 rounded-full bg-slate-700 border-2 border-slate-600 flex items-center justify-center overflow-hidden">
+                <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Game Area -->
+    <main class="flex-grow flex flex-col items-center justify-center w-full max-w-7xl px-4 z-10 relative">
+        
+        <!-- Hero Title -->
+        <div class="text-center mb-12">
+            <h2 class="text-5xl md:text-7xl font-extrabold text-white mb-2 tracking-tight drop-shadow-xl">
+                CHOOSE YOUR <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">WEAPON</span>
+            </h2>
+            <p class="text-lg text-slate-400 max-w-2xl mx-auto">Select a card to challenge the AI. Win to rank up.</p>
+        </div>
+
+        <!-- Cards Container -->
+        <div id="game-area" class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl perspective-1000">
+            
+            <!-- Rock Card -->
+            <button onclick="playGame('rock')" class="group relative aspect-[3/4] rounded-2xl overflow-hidden transition-all duration-300 card-hover bg-slate-800 border border-slate-700 hover:z-20">
+                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style="background-image: url('https://images.unsplash.com/photo-1575459287311-6663f7215206?auto=format&fit=crop&q=80&w=1000'); opacity: 0.6;"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-6 w-full text-left">
+                    <span class="inline-block px-2 py-1 bg-yellow-500/20 text-yellow-400 text-xs font-bold rounded mb-2">LEGENDARY</span>
+                    <h3 class="text-3xl font-bold text-white mb-1">ROCK</h3>
+                    <p class="text-sm text-slate-300">Crushes scissors. Solid defense.</p>
+                </div>
+            </button>
+
+            <!-- Paper Card -->
+            <button onclick="playGame('paper')" class="group relative aspect-[3/4] rounded-2xl overflow-hidden transition-all duration-300 card-hover bg-slate-800 border border-slate-700 hover:z-20">
+                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style="background-image: url('https://images.unsplash.com/photo-1549468007-aa31969a9e32?auto=format&fit=crop&q=80&w=1000'); opacity: 0.6;"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-6 w-full text-left">
+                    <span class="inline-block px-2 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded mb-2">RARE</span>
+                    <h3 class="text-3xl font-bold text-white mb-1">PAPER</h3>
+                    <p class="text-sm text-slate-300">Covers rock. Flexible strats.</p>
+                </div>
+            </button>
+
+            <!-- Scissor Card -->
+            <button onclick="playGame('scissor')" class="group relative aspect-[3/4] rounded-2xl overflow-hidden transition-all duration-300 card-hover bg-slate-800 border border-slate-700 hover:z-20">
+                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style="background-image: url('https://images.unsplash.com/photo-1582845512747-e42005c9569d?auto=format&fit=crop&q=80&w=1000'); opacity: 0.6;"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-6 w-full text-left">
+                    <span class="inline-block px-2 py-1 bg-rose-500/20 text-rose-400 text-xs font-bold rounded mb-2">EPIC</span>
+                    <h3 class="text-3xl font-bold text-white mb-1">SCISSOR</h3>
+                    <p class="text-sm text-slate-300">Cuts paper. Sharp precision.</p>
+                </div>
+            </button>
+        </div>
+
+        <!-- Result Section (Initially Hidden) -->
+        <div id="result-area" class="hidden glass-panel rounded-3xl p-8 max-w-2xl w-full text-center shadow-2xl animate-fade-in relative overflow-hidden mt-8">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 via-yellow-500 to-indigo-500"></div>
+            
+            <h3 id="result-title" class="text-4xl md:text-5xl font-black text-white mb-6 uppercase tracking-widest drop-shadow-md">YOU WIN!</h3>
+            
+            <div class="flex justify-center items-center gap-8 md:gap-16 mb-8">
+                <div class="text-center">
+                    <p class="text-xs text-slate-400 uppercase tracking-widest mb-2">You</p>
+                    <div id="user-choice-display" class="w-24 h-24 md:w-32 md:h-32 bg-slate-800 rounded-xl flex items-center justify-center border border-slate-600 shadow-inner">
+                        <!-- Icon injected by JS -->
+                    </div>
+                </div>
+
+                <div class="text-2xl font-bold text-slate-500">VS</div>
+
+                <div class="text-center">
+                    <p class="text-xs text-slate-400 uppercase tracking-widest mb-2">Computer</p>
+                    <div id="computer-choice-display" class="w-24 h-24 md:w-32 md:h-32 bg-slate-800 rounded-xl flex items-center justify-center border border-slate-600 shadow-inner">
+                         <!-- Icon injected by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="resetGame()" class="px-8 py-3 bg-white text-slate-900 font-bold rounded-full hover:bg-indigo-50 hover:scale-105 transition-all w-full max-w-xs mx-auto shadow-lg shadow-white/10">PLAY AGAIN</button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full text-center text-slate-600 text-sm py-4 z-10">
+        <p>&copy; 2024 Rock Paper Scissor Ultimate. <span class="mx-2">|</span> Powered by Flask & Tailwind</p>
+    </footer>
+
+    <!-- Background Decoration -->
+    <div class="fixed top-0 left-0 w-full h-full pointer-events-none z-0">
+        <div class="absolute top-[20%] left-[10%] w-96 h-96 bg-purple-600/20 rounded-full blur-3xl mix-blend-screen animate-blob"></div>
+        <div class="absolute top-[30%] right-[10%] w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl mix-blend-screen animate-blob animation-delay-2000"></div>
+        <div class="absolute bottom-[20%] left-[30%] w-96 h-96 bg-blue-600/20 rounded-full blur-3xl mix-blend-screen animate-blob animation-delay-4000"></div>
+    </div>
+
+    <script>
+        // Icons mapping
+        const icons = {
+            'rock': '<svg class="w-12 h-12 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>',
+            'paper': '<svg class="w-12 h-12 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>',
+            'scissor': '<svg class="w-12 h-12 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>'
+        };
+
+        const iconsGeneric = {
+            'rock': '🪨',
+            'paper': '📄', 
+            'scissor': '✂️'
+        }
+
+        async function playGame(choice) {
+            try {
+                const response = await fetch('/play', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ choice: choice })
+                });
+                
+                if (!response.ok) throw new Error("Game failed");
+                const data = await response.json();
+                
+                showResult(data);
+            } catch (err) {
+                console.error(err);
+                alert("Something went wrong! Please try again.");
+            }
+        }
+
+        function showResult(data) {
+            const gameArea = document.getElementById('game-area');
+            const resultArea = document.getElementById('result-area');
+            const resultTitle = document.getElementById('result-title');
+            
+            // Hide game area
+            gameArea.classList.add('hidden');
+            
+            // Update result content
+            document.getElementById('user-choice-display').innerHTML = iconsGeneric[data.user_choice];
+            document.getElementById('user-choice-display').className = `w-24 h-24 md:w-32 md:h-32 rounded-xl flex items-center justify-center border border-slate-600 shadow-inner text-4xl ${getColor(data.user_choice)}`;
+            
+            document.getElementById('computer-choice-display').innerHTML = iconsGeneric[data.computer_choice];
+            document.getElementById('computer-choice-display').className = `w-24 h-24 md:w-32 md:h-32 rounded-xl flex items-center justify-center border border-slate-600 shadow-inner text-4xl ${getColor(data.computer_choice)}`;
+
+            resultTitle.textContent = data.result.toUpperCase();
+            if (data.result === 'You Win!') {
+                resultTitle.className = "text-4xl md:text-5xl font-black text-green-400 mb-6 uppercase tracking-widest drop-shadow-md";
+            } else if (data.result === 'Computer Wins!') {
+                resultTitle.className = "text-4xl md:text-5xl font-black text-rose-400 mb-6 uppercase tracking-widest drop-shadow-md";
+            } else {
+                resultTitle.className = "text-4xl md:text-5xl font-black text-slate-200 mb-6 uppercase tracking-widest drop-shadow-md";
+            }
+
+            // Show result area
+            resultArea.classList.remove('hidden');
+        }
+
+        function resetGame() {
+            document.getElementById('result-area').classList.add('hidden');
+            document.getElementById('game-area').classList.remove('hidden');
+        }
+
+        function getColor(choice) {
+            if (choice === 'rock') return 'bg-yellow-500/10 text-yellow-500';
+            if (choice === 'paper') return 'bg-blue-500/10 text-blue-500';
+            if (choice === 'scissor') return 'bg-rose-500/10 text-rose-500';
+            return 'bg-slate-800';
+        }
+    </script>
+</body>
+</html>
